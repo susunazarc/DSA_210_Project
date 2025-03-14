@@ -1,7 +1,7 @@
 # DSA_210_Project
 
 
-Project Idea
+Project Idea:
 In this project, I will analyze how cosmetic sales trends correlate with financial growth and economic downturns. My goal is to determine whether the “Lipstick Index” phenomenon holds true by examining whether consumers shift toward smaller luxury purchases, such as cosmetics, during financial crises. I plan on doing this by comparing cosmetic sales data with economic indicators like GDP growth and stock market performance to identify patterns that reflect consumer behavior during different financial conditions. If a clear relationship exists, this analysis could provide insights into how economic uncertainty influences spending habits on affordable luxuries. 
 
 Datasets 
