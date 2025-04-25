@@ -1,0 +1,107 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import pearsonr
+import zipfile
+import os
+
+# Data Collection
+
+# Paths to uploaded files
+cosmetic_sales_zip_path = '/mnt/data/archive (1).zip'
+gdp_zip_path = '/mnt/data/API_NY.GDP.MKTP.CD_DS2_en_csv_v2_19294.zip'
+
+# Create folders for extraction
+cosmetic_extract_path = '/mnt/data/cosmetic_data'
+gdp_extract_path = '/mnt/data/gdp_data'
+
+os.makedirs(cosmetic_extract_path, exist_ok=True)
+os.makedirs(gdp_extract_path, exist_ok=True)
+
+# Extract files
+with zipfile.ZipFile(cosmetic_sales_zip_path, 'r') as zip_ref:
+    zip_ref.extractall(cosmetic_extract_path)
+
+with zipfile.ZipFile(gdp_zip_path, 'r') as zip_ref:
+    zip_ref.extractall(gdp_extract_path)
+
+# Load datasets
+cosmetic_data = pd.read_csv(os.path.join(cosmetic_extract_path, 'customer_shopping_data.csv'))
+gdp_data = pd.read_csv(os.path.join(gdp_extract_path, 'API_NY.GDP.MKTP.CD_DS2_en_csv_v2_19294.csv'), skiprows=4)
+
+# Data Preprocessing
+
+# Correct date column name and create Total Amount
+cosmetic_data['invoice_date'] = pd.to_datetime(cosmetic_data['invoice_date'])
+cosmetic_data['Total Amount'] = cosmetic_data['quantity'] * cosmetic_data['price']
+cosmetic_data['Year'] = cosmetic_data['invoice_date'].dt.year
+
+# Focus on Beauty and cosmetics
+beauty_sales = cosmetic_data[cosmetic_data['category'] == 'Beauty and cosmetics']
+
+# Aggregate total sales per year
+beauty_sales_yearly = beauty_sales.groupby('Year').agg({'Total Amount': 'sum'}).reset_index()
+beauty_sales_yearly = beauty_sales_yearly[(beauty_sales_yearly['Year'] >= 2021) & (beauty_sales_yearly['Year'] <= 2023)]
+
+# Process GDP data
+gdp_turkey = gdp_data[gdp_data['Country Name'] == 'Turkey']
+gdp_turkey = gdp_turkey.melt(id_vars=['Country Name'], var_name='Year', value_name='GDP')
+gdp_turkey['Year'] = pd.to_numeric(gdp_turkey['Year'], errors='coerce')
+gdp_turkey = gdp_turkey.dropna(subset=['Year'])
+gdp_turkey = gdp_turkey[(gdp_turkey['Year'] >= 2021) & (gdp_turkey['Year'] <= 2023)]
+gdp_turkey = gdp_turkey[['Year', 'GDP']]
+
+# Merge datasets
+merged_data = pd.merge(beauty_sales_yearly, gdp_turkey, on='Year', how='inner')
+
+# Exploratory Data Analysis (EDA)
+
+# Summary Statistics
+print(merged_data.describe())
+
+# Beauty Sales Over Time
+plt.figure()
+plt.plot(merged_data['Year'], merged_data['Total Amount'])
+plt.title('Beauty Product Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Total Sales Amount')
+plt.grid(True)
+plt.show()
+
+# GDP vs Beauty Sales
+plt.figure()
+plt.scatter(merged_data['GDP'], merged_data['Total Amount'])
+plt.title('GDP vs Beauty Product Sales')
+plt.xlabel('GDP (Current US$)')
+plt.ylabel('Total Sales Amount')
+plt.grid(True)
+plt.show()
+
+# Correlation Matrix
+plt.figure()
+sns.heatmap(merged_data.corr(), annot=True, cmap="coolwarm")
+plt.title('Correlation Matrix')
+plt.show()
+
+# Hypothesis Testing
+
+# GDP vs Beauty Sales
+print("\nGDP vs Beauty Product Sales Correlation Test:")
+corr_gdp, p_value_gdp = pearsonr(merged_data['GDP'], merged_data['Total Amount'])
+print(f'Correlation Coefficient: {corr_gdp:.4f}, p-value: {p_value_gdp:.4f}')
+
+# Conclusion
+
+print("\nConclusion:")
+if p_value_gdp < 0.05:
+    print("There is a statistically significant relationship between GDP and beauty product sales in Turkey.")
+    if corr_gdp < 0:
+        print("Higher GDP tends to correlate with lower beauty product sales, suggesting the Lipstick Index effect.")
+    else:
+        print("Higher GDP tends to correlate with higher beauty product sales.")
+else:
+    print("There is no statistically significant relationship between GDP and beauty product sales in Turkey.")
+    print("Although a correlation exists, it is not strong enough to be considered statistically significant based on the data from 2021 to 2023.")
+
+print("Further research could include analyzing Consumer Confidence Index (CCI) and inflation data for a fuller understanding.")
+
