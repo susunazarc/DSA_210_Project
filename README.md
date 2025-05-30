@@ -31,37 +31,37 @@ Turkey’s economic data will be analyzed alongside beauty retail sales in İsta
 Methods I’ve Used:
 
 Data Cleaning & Transformation:
-	- Filtered the “Beauty Product Retail Sales in Istanbul (2021–2023)” cosmetic sales data.
+Filtered the “Beauty Product Retail Sales in Istanbul (2021–2023)” cosmetic sales data.
  
-	- Converted date formats and calculated total sales.
+Converted date formats and calculated total sales.
  
-	- Processed GDP and CPI data for consistency.
+Processed GDP and CPI data for consistency.
 
  
 Exploratory Data Analysis (EDA):
-	- Visualized trends in cosmetic sales, GDP, and CPI over time.
+Visualized trends in cosmetic sales, GDP, and CPI over time.
  
-	- Generated a correlation matrix to assess relationships between variables.
+Generated a correlation matrix to assess relationships between variables.
  
 Hypothesis Testing:
 
-	- Conducted Pearson correlation tests to evaluate the relationship between GDP and cosmetic sales.
+Conducted Pearson correlation tests to evaluate the relationship between GDP and cosmetic sales.
  
 Machine Learning:
 
-	- Implemented a Linear Regression model using scaled GDP and CPI as predictors for cosmetic sales.
+Implemented a Linear Regression model using scaled GDP and CPI as predictors for cosmetic sales.
 
 Key Findings:
 
 Correlation Analysis:
-- Correlation between GDP and cosmetic sales: -0.353.
+Correlation between GDP and cosmetic sales: -0.353.
   
-- P-value: 0.071 (not statistically significant at α = 0.05).
+P-value: 0.071 (not statistically significant at α = 0.05).
 
 Machine Learning Model:
-- Root Mean Square Error (RMSE): ~19,594
+Root Mean Square Error (RMSE): ~19,594
   
-- R² Score: -0.14 (indicates poor model fit).
+R² Score: -0.14 (indicates poor model fit).
 
 My Insights and Conclusion: 
 
