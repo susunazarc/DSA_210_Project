@@ -44,9 +44,11 @@ Exploratory Data Analysis (EDA):
 	- Generated a correlation matrix to assess relationships between variables.
  
 Hypothesis Testing:
+
 	- Conducted Pearson correlation tests to evaluate the relationship between GDP and cosmetic sales.
  
 Machine Learning:
+
 	- Implemented a Linear Regression model using scaled GDP and CPI as predictors for cosmetic sales.
 
 Key Findings:
